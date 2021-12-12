@@ -1,5 +1,5 @@
-#ifndef _MATRIX_H_
-#define _MATRIX_H_
+#ifndef _SPARSEMATRIX_H_
+#define _SPARSEMATRIX_H_
 #include <fstream>
 #include <vector>
 #include <sstream>
