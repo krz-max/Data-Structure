@@ -1,90 +1,86 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class MyQuickSort
 {
 private:
-    int* data;
-    int size;
-    int capacity;
+    vector<int> List;
     int stepcount;
 public:
     MyQuickSort();
-    ~MyQuickSort();
+    ~MyQuickSort(){;};
     void insert(int num);
     void printList();
-    void QuickSort();
-    void swap(int *a, int *b);
+    void printList(ofstream &f_out);
     int Partition(int front, int end);
     void QuickSort(int front, int end);
-    void Run();
+    void Run(ofstream& f_out);
 };
 
 MyQuickSort::MyQuickSort()
 {
-    stepcount = size = 0;
-    capacity = 4;
-    data = new int [capacity];
+    stepcount = 0;
+    List.push_back(-1);
 }
 
-MyQuickSort::~MyQuickSort()
-{
-    delete [] data;
-}
 
-void MyQuickSort::insert(int num)
+inline void MyQuickSort::insert(int num)
 {
-    if(size == capacity)
-    {
-        int* copy = new int [2*capacity];
-        for(int i = 0; i < capacity; i++)
-        {
-            copy[i] = data[i];
-        }
-        delete [] data;
-        data = copy;
-    }
-    data[size++] = num;
+    List.push_back(num);
     return ;
 }
 
-void MyQuickSort::printList()
+inline void MyQuickSort::printList()
 {
-    for(int i = 0; i < size; i++)
+    for(int i = 1; i < List.size(); i++)
     {
-        cout << data[i] << " " ;
+        cout << List[i] << " ";
     }
     cout << endl;
     return ;
 }
 
-int MyQuickSort::Partition(int front, int end)
+inline void MyQuickSort::printList(ofstream &f_out)
 {
-    int pivot = data[front];
-    int i = front;
-    for(int j = front+1; j <= end; j++)
+    for(int i = 1; i < List.size(); i++)
     {
-        if(data[j] < pivot){
-            int temp = data[j-1];
-            data[j-1] = data[j];
-            data[j] = temp;
-            stepcount++;
-            i++;
-        }
+        f_out << List[i] << " ";
     }
-    if(data[i] != pivot){
-        int temp = data[i];
-        data[i] = pivot;
-        data[front] = temp;
-        stepcount++;
-    }
-    return i;
+    f_out << endl;
+    return ;
 }
 
-void MyQuickSort::QuickSort(int front, int end)
+inline int MyQuickSort::Partition(int front, int end)
 {
-    if(front < end && end < size)
+    int pivot = List[front];
+    int i = front;
+    int j = end+1;
+    do{
+        while(i < end && List[++i] < pivot);
+        while(List[--j] > pivot);
+        if(i < j)
+        {
+            int temp = List[i];
+            List[i] = List[j];
+            List[j] = temp;
+            stepcount++;
+        }
+    }while(i < j);
+    if(j != front)
+    {
+        int temp = List[j];
+        List[j] = pivot;
+        List[front] = temp;
+        stepcount++;
+    }
+    return j;
+}
+
+inline void MyQuickSort::QuickSort(int front, int end)
+{
+    if(front < end && end < List.size())
     {
         int pivot = Partition(front, end);
         QuickSort(front, pivot-1);
@@ -92,7 +88,7 @@ void MyQuickSort::QuickSort(int front, int end)
     }
 }
 
-void MyQuickSort::Run(){
-    QuickSort(0, size-1);
-    cout << stepcount << endl;
+inline void MyQuickSort::Run(ofstream& f_out){
+    QuickSort(1, List.size()-1);
+    f_out << stepcount << endl;
 }
