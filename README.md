@@ -1,1 +1,3 @@
-# A colection of my data structure HW and all other practices.
+# NYCU Data Structure 110-1
+* Prof. 林柏宏
+
